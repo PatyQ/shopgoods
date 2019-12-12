@@ -1,0 +1,23 @@
+#配置搜索工程端口号
+server:
+  port: 8890
+
+#关闭页面缓存
+spring:
+  thymeleaf:
+    cache: false
+dubbo:
+  application:
+    name: web-search
+    #注册地址
+  registry:
+    address: zookeeper://cheeeg.com:2181
+  #   Dubbo缺省会在启动时检查依赖的服务是否可用，不可用时抛出异常，
+  #   阻止Spring初始化完成，以便上线时，能及早发现问题，默认check=true
+  consumer:
+    check: false
+    timeout: 5000
+
+  #不提供服务不需要
+  protocol:
+    port: -1

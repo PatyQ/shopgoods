@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.cy.dao.IGoodsDao">
+
+    <resultMap id="MyRsultMap" type="com.cy.entity.Goods">
+        <id column="id" property="id"/>
+        <result column="subject" property="subject"/>
+        <result column="info" property="info"/>
+        <result column="price" property="price"/>
+        <result column="save" property="save"/>
+        <result column="create_time" property="createTime"/>
+        <result column="status" property="status"/>
+        <result column="fmurl" property="fmurl"/>
+        <!-- 对多-->
+        <collection property="otherurl" ofType="string">
+            <result column="otherurl"/>
+        </collection>
+
+    </resultMap>
+
+
+    <select id="selectPageVo" resultType="com.cy.entity.Goods">
+        select id,subject,info,save from goods
+    </select>
+
+
+<!--    <select id="selectPageVo" resultMap="MyRsultMap">-->
+<!--        select g.*,-->
+<!--        (select gis.url from goods_images gis where gid = g.id and gis.isfengmian = 1) as 'fmurl',-->
+<!--        gi.url as 'otherurls'-->
+<!--        from goods g join goods_images gi on g.id = gi.gid where gi.isfengmian = 0-->
+<!--    </select>-->
+
+    <select id="selGoodsById" resultMap="MyRsultMap">
+        select g.*,
+        (select gis.url from goods_images gis where gid = g.id and gis.isfengmian = 1) as 'fmurl',
+        gi.url as 'otherurl'
+        from goods g join goods_images gi on g.id = gi.gid
+        where gi.isfengmian = 0 and g.id = #{id}
+    </select>
+
+</mapper>

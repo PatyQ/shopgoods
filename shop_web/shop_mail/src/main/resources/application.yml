@@ -1,0 +1,15 @@
+spring:
+  mail:
+    host: smtp.sina.com
+    username: chauncyq@sina.com
+    password: ce651ebe3b91b71e
+    #protocol : 协议
+    protocol: smtp
+
+  rabbitmq:
+    host: 192.168.184.222
+    username: admin
+    password: admin
+    virtual-host: /admin
+server:
+  port: 8999

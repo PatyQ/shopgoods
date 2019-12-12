@@ -1,0 +1,23 @@
+server:
+  port: 8892
+
+dubbo:
+  application:
+    name: web-sso
+  registry:
+    address: zookeeper://cheeeg.com:2181
+  consumer:
+    check: false
+    timeout: 10000
+    retries: 0
+
+spring:
+  thymeleaf:
+    cache: false
+  rabbitmq:
+    host: 192.168.184.222
+    username: admin
+    password: admin
+    virtual-host: /admin
+  redis:
+    host: 192.168.184.222
