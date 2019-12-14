@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <base th:href="${#request.getContextPath() + '/'}"/>
+    <meta charset="UTF-8">
+    <title>$Title$</title>
+    <script src="http://libs.baidu.com/jquery/2.1.4/jquery.min.js"></script>
+</head>
+<body>
+
+
+<div th:fragment="myheader">
+<script>
+        //进行登录认证的操作
+        $(function(){
+            $.ajax({
+                url:"http://localhost:8892/sso/islogin",
+                // xhrFields: {
+                //     withCredentials: true
+                // },
+                success: function(data){
+                    debugger
+                    console.info(data);
+                    if(data.code == "200"){
+                        //已经登录
+                        $("#pid").html(data.data.nickname + "您好，欢迎来到<b>ShopCZ商城</b>  <a href='http://localhost:8892/sso/logout'>注销</a>");
+                    } else {
+                        $("#pid").html("" +
+                            "[<a onclick='mylogin();'>登录</a>]" +
+                            "[<a href=\"http://localhost:8892/sso/toregister\">注册</a>]");
+                    }
+                },
+                dataType: "jsonp"
+            });
+        });
+
+
+    function mylogin(){
+        //获得当前页面url
+        var returnUrl = location.href;
+        //编码url
+        returnUrl = encodeURIComponent(returnUrl);
+        location.href="http://localhost:8892/sso/gologin?returnUrl=" + returnUrl;
+    }
+
+</script>
+
+<div class="shop_hd_topNav">
+    <div class="shop_hd_topNav_all">
+        <!-- Header TopNav Left -->
+        <div class="shop_hd_topNav_all_left">
+            <p id="pid">
+<!--                <a href="http://localhost:8892/sso/islogin">这里填写已经登录的用户名</a>-->
+            </p>
+        </div>
+        <!-- Header TopNav Left End -->
+
+        <!-- Header TopNav Right -->
+        <div class="shop_hd_topNav_all_right">
+            <ul class="topNav_quick_menu">
+
+                <li>
+                    <div class="topNav_menu">
+                        <a href="#" class="topNavHover">我的商城<i></i></a>
+                        <div class="topNav_menu_bd" style="display:none;" >
+                            <ul>
+                                <li><a title="已买到的商品" target="_top" href="#">已买到的商品</a></li>
+                                <li><a title="个人主页" target="_top" href="#">个人主页</a></li>
+                                <li><a title="我的好友" target="_top" href="#">我的好友</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="topNav_menu">
+                        <a href="#" class="topNavHover">卖家中心<i></i></a>
+                        <div class="topNav_menu_bd" style="display:none;">
+                            <ul>
+                                <li><a title="已售出的商品" target="_top" href="#">已售出的商品</a></li>
+                                <li><a title="销售中的商品" target="_top" href="#">销售中的商品</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="topNav_menu">
+                        <a href="#" class="topNavHover">购物车<b>0</b>种商品<i></i></a>
+                        <div class="topNav_menu_bd" style="display:none;">
+                            <!--
+                            <ul>
+                              <li><a title="已售出的商品" target="_top" href="#">已售出的商品</a></li>
+                              <li><a title="销售中的商品" target="_top" href="#">销售中的商品</a></li>
+                            </ul>
+                            -->
+                            <p>还没有商品，赶快去挑选！</p>
+                        </div>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="topNav_menu">
+                        <a href="#" class="topNavHover">我的收藏<i></i></a>
+                        <div class="topNav_menu_bd" style="display:none;">
+                            <ul>
+                                <li><a title="收藏的商品" target="_top" href="#">收藏的商品</a></li>
+                                <li><a title="收藏的店铺" target="_top" href="#">收藏的店铺</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="topNav_menu">
+                        <a href="#">站内消息</a>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+        <!-- Header TopNav Right End -->
+    </div>
+    <div class="clear"></div>
+</div>
+</div>
+
+</body>
+</html>

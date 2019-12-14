@@ -63,6 +63,11 @@
 </div>
 -->
 <!--顶部信息end-->
+<script>
+    // $(function () {
+    //     var myhidden =
+    // })
+</script>
 
 <div class="header wrap1000">
     <a href=""><img src="images/logo.png" alt="" /></a>
@@ -75,6 +80,7 @@
         </div>
         <div class="form-bd">
             <form action="/sso/login" method="post">
+                <input id="myhidden" type="hidden" name="returnUrl" th:value="${#request.getParameter('returnUrl')}"/>
                 <dl>
                     <dt>用户名</dt>
                     <dd><input type="text" name="username" class="text" /></dd>
