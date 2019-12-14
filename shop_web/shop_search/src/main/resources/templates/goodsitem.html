@@ -616,11 +616,27 @@
                 </li>
                 <li style="padding:20px 0;">
                     <label>&nbsp;</label>
-                    <span><a class="goods_sub goods_sub_gou">加入购物车</a></span>
+                    <span><a class="goods_sub goods_sub_gou" onclick="addcar()">加入购物车</a></span>
                 </li>
             </ul>
         </div>
     </div>
+
+    <script th:inline="javascript">
+        function addcar() {
+            var gid = [[${goods.id}]]
+            var gnumber = $("#good_nums").val();
+            debugger
+            console.info(gid+"num: "+gnumber);
+            //加入购物车
+            location.href="http://localhost:9993/car/addcat?gid="+gid+"&gnumber="+gnumber;
+        }
+    </script>
+
+
+
+
+
     <!-- 商品展示 End -->
 
     <div class="clear mt15"></div>
