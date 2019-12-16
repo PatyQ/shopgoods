@@ -1,6 +1,6 @@
 package com.cy.aop;
 
-import org.apache.catalina.User;
+import com.cy.entity.User;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -13,7 +13,9 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.net.URLEncoder;
 
 @Component
 @Aspect
@@ -56,7 +58,7 @@ public class IsLoginAOP {
         //判断redis中是否存在该用户
         User user = null;
         if (loginToken!=null){
-            user = (User) redisTemplate.opsForValue().get(loginToken);
+            user =  (User) redisTemplate.opsForValue().get(loginToken);
         }
 
         if (user == null){
@@ -74,13 +76,27 @@ public class IsLoginAOP {
     //==========================根据当前页面,登录后跳转到对应的页面=============================//
                 //强制跳转到登录页面
                 String returnLogin = "http://localhost:8892/sso/gologin";
-                return "redirect:http://localhost:8892/sso/gologin";
+                String requestURI = httpServletRequest.getRequestURI();
+                StringBuffer requestURL = httpServletRequest.getRequestURL();
+                String queryString = httpServletRequest.getQueryString();
+                String URLQuery = requestURL.toString()+"?"+queryString;//拼接为完整的URL
+                String encode = null;
+                try {
+                    encode = URLEncoder.encode(URLQuery,"utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                Object resultUrl = "http://localhost:8892/sso/gologin?returnUrl="+encode;
+
+                return "redirect:"+resultUrl;
             }
         }
 
 
+
         /**
          * 环绕增强返回本该返回的数据
+         * 没有强制要求登录,该干嘛干嘛
          */
         Object result = null;
         try {

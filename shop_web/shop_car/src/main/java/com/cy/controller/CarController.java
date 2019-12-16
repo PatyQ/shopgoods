@@ -11,9 +11,7 @@ public class CarController {
     @RequestMapping("addcat")
     @IsLogin(mustLogin = true)
     public String addCar(Integer gid,Integer gnumber){
-
         System.out.println("商品ID"+gid+"商品数量"+gnumber);
-
 
         return "showcar";
     }

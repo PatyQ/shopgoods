@@ -123,6 +123,7 @@ public class SSOController {
         redisTemplate.delete(loginToken);
         Cookie cookie = new Cookie("loginToken",null);
         cookie.setMaxAge(0);
+        cookie.setPath("/");
         response.addCookie(cookie);
         return "redirect:http://localhost:8889/";
     }
