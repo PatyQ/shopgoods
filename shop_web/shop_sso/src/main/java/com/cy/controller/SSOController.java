@@ -61,6 +61,7 @@ public class SSOController {
     @RequestMapping(value = "login")
     public String login(String username, String password, String returnUrl, HttpServletResponse response){
         User user = userService.selUserByName(username);
+        Integer id = user.getId();
         if (user==null){
             return "login";
         }
@@ -69,9 +70,11 @@ public class SSOController {
             return "login";
         }
         //======================用户存在且密码验证正确==============================//
+        //将备用id放进去
+        user.setById(user.getId());
         String uuid = UUID.randomUUID().toString();
         redisTemplate.opsForValue().set(uuid,user);
-        redisTemplate.expire(uuid,10,TimeUnit.MINUTES);
+        redisTemplate.expire(uuid,20,TimeUnit.MINUTES);
 
         //将token写入浏览器的cookie中→配置cookie的各种参数
         Cookie cookie = new Cookie("loginToken",uuid);

@@ -16,4 +16,7 @@ public interface IGoodsService {
     List<GoodsImages> selGoodsImages();
 
     Goods selGoodsById(Integer id);
+
+//    String addCartGoods(ShopCart shopCart, User user, String cartToken);
+
 }

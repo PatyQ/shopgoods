@@ -72,7 +72,6 @@ public class IsLoginAOP {
 
             //必须登录为true,获取到的用户对象为空,未登录,返回登录页面
             if (mustLogin){
-
     //==========================根据当前页面,登录后跳转到对应的页面=============================//
                 //强制跳转到登录页面
                 String returnLogin = "http://localhost:8892/sso/gologin";
@@ -92,7 +91,9 @@ public class IsLoginAOP {
             }
         }
 
-
+        //如果用户不为空,则将该用户存入该线程中
+        //如果登录user就不为空，如果不登录user就为空-----前置增强
+        UserHolder.setUser(user);
 
         /**
          * 环绕增强返回本该返回的数据
@@ -104,6 +105,10 @@ public class IsLoginAOP {
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
+
+        //清空threadlocal-----后置增强回收资源,防止再有人拿到当前线程的资源
+        UserHolder.setUser(null);
+
         return result;
     }
 

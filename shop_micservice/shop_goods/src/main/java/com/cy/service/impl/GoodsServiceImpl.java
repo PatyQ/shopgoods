@@ -83,6 +83,10 @@ public class GoodsServiceImpl implements IGoodsService {
         return insert;
     }
 
+    /**
+     * 查询所有图片
+     * @return
+     */
     @Override
     public List<GoodsImages> selGoodsImages() {
         List<GoodsImages> goodsImages1 = goodsImagesDao.selectList(null);
@@ -91,9 +95,21 @@ public class GoodsServiceImpl implements IGoodsService {
 
     @Override
     public Goods selGoodsById(Integer id) {
-
         return goodsDao.selGoodsById(id);
     }
+
+//    /**
+//     * 向数据库中添加购物车
+//     * @param shopCart
+//     * @param user
+//     * @param cartToken
+//     * @return
+//     */
+//    @Override
+//    public String addCartGoods(ShopCart shopCart, User user, String cartToken) {
+//
+//        return null;
+//    }
 
 }
 

@@ -7,19 +7,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-@TableName("user")
-public class User extends BaseEntity {
-    private String username;
-    private String password;
-    private String nickname;
-    private String email;
-    private String phone;
+@TableName("shopcart")
+public class ShopCart extends BaseEntity implements Serializable {
 
-    //添加一个备用ID
+    private Integer uid;
+    private Integer gid;
+    private Integer number;
+    private BigDecimal cartPrice;//商品小计
+
     @TableField(exist = false)
-    private int byId;
+    private Goods goods;
 }
