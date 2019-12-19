@@ -98,10 +98,12 @@ public class ShopCarServiceImpl implements IShopCartService {
         }
 
         //关联查询所有购物车的商品信息，方便页面展示
-        for (ShopCart shopCart : shopCarts) {
-            Integer gid = shopCart.getGid();
-            Goods goods = goodsService.selGoodsById(gid);
-            shopCart.setGoods(goods);
+        if (shopCarts != null){
+            for (ShopCart shopCart : shopCarts) {
+                Integer gid = shopCart.getGid();
+                Goods goods = goodsService.selGoodsById(gid);
+                shopCart.setGoods(goods);
+            }
         }
 
         return shopCarts;

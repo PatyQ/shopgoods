@@ -8,7 +8,10 @@ import com.cy.entity.ShopCart;
 import com.cy.entity.User;
 import com.cy.service.IGoodsService;
 import com.cy.service.IShopCartService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,6 +28,8 @@ public class CarController {
     private IGoodsService goodsService;
     @Reference
     private IShopCartService shopCartService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 添加购物车
@@ -85,6 +90,68 @@ public class CarController {
         List<ShopCart> shopCarts = shopCartService.selCarts(cartToken, user);
 
         return callback != null ? callback + "(" + JSON.toJSONString(shopCarts) + ")" : JSON.toJSONString(shopCarts);
+    }
+
+    /**
+     * 将redis中的购物车信息合并
+     * @param cartToken
+     * @param returnUrl
+     * @return
+     */
+    @RequestMapping("merge")
+    @IsLogin(mustLogin = true)
+    public String mergeCart(@CookieValue(name="cartToken",required = false) String cartToken
+            ,String returnUrl,HttpServletResponse response){
+
+        if (cartToken != null){
+            //获取到redis中的购物车
+            Long size = redisTemplate.opsForList().size(cartToken);
+            List<ShopCart> shopCarts = redisTemplate.opsForList().range(cartToken, 0, size);
+
+            //将redis中的购物车添加到数据库中并清空redis中当前用户的购物车信息
+            User user = UserHolder.getUser();
+
+            for (ShopCart cart : shopCarts) {
+                cart.setUid(user.getById());
+                shopCartService.addCartGoods(cart,user,cartToken);
+            }
+
+            //删除当前用户的redis购物车并删除cookie
+            Boolean delete = redisTemplate.delete(cartToken);
+
+            Cookie cookie = new Cookie("cartToken",null);
+            cookie.setPath("/");
+            cookie.setMaxAge(0);
+            response.addCookie(cookie);
+        }
+
+        return "redirect:"+ returnUrl;
+    }
+
+
+    /**
+     * 跳转到购物车登录页面
+     * @param cartToken
+     * @param map
+     * @return
+     */
+    @IsLogin
+    @RequestMapping(value = "showShopCarts")
+    public String showShopCarts(@CookieValue(name = "cartToken",required = false)String cartToken,
+                                ModelMap map){
+
+        User user = UserHolder.getUser();
+        List<ShopCart> shopCarts = null;
+        if (user != null){//已登录
+            user.setId(user.getById());
+            shopCarts = shopCartService.selCarts(cartToken, user);
+
+        }else {//未登录
+            Long size = redisTemplate.opsForList().size(cartToken);
+            shopCarts = redisTemplate.opsForList().range(cartToken, 0, size);
+        }
+        map.put("carts",shopCarts);
+        return "cartlist";
     }
 
 

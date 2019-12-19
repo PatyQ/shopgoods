@@ -82,12 +82,23 @@ public class SSOController {
         cookie.setDomain("localhost");//域名
         cookie.setPath("/");
 
-        System.out.println("将要返回的页面"+returnUrl);
         response.addCookie(cookie);
         if (returnUrl==null || returnUrl.equals("")){
             return "redirect:http://localhost:8889";
-        }else {
-            return "redirect:"+returnUrl;
+        }else {//当前携带的有URL,双重重定向
+//            try {
+//                returnUrl = URLEncoder.encode(returnUrl,"utf-8");
+//            } catch (UnsupportedEncodingException e) {
+//                e.printStackTrace();
+//            }
+//            try {
+//                returnUrl = URLEncoder.encode(returnUrl, "utf-8");
+//            } catch (UnsupportedEncodingException e) {
+//                e.printStackTrace();
+//            }
+
+            System.out.println("将要返回的页面"+returnUrl);
+            return "redirect:http://localhost:9993/car/merge?returnUrl="+returnUrl;
         }
     }
 
