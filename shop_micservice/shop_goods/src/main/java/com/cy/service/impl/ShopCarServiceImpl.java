@@ -28,6 +28,19 @@ public class ShopCarServiceImpl implements IShopCartService {
     @Reference
     private IGoodsService goodsService;
 
+
+    //util
+    private List<ShopCart> shopCarts(List<ShopCart> carts){
+        //关联查询所有购物车的商品信息，方便页面展示
+        for (ShopCart shopCart : carts) {
+            Integer id = shopCart.getGid();
+            Goods goods = goodsService.selGoodsById(id);
+            shopCart.setGoods(goods);
+        }
+        return carts;
+    }
+
+
     @Override
     public String addCartGoods(ShopCart shopCart, User user, String cartToken) {
 
@@ -107,5 +120,25 @@ public class ShopCarServiceImpl implements IShopCartService {
         }
 
         return shopCarts;
+    }
+
+    /**
+     * 通过商品id查询
+     * @param gid
+     * @param user
+     * @return
+     */
+    @Override
+    public List<ShopCart> queryCartsByGid(Integer[] gid, User user) {
+
+        List<ShopCart> carts = null;
+        if (gid != null && user != null){
+            QueryWrapper<ShopCart> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("uid",user.getById());
+            queryWrapper.in("gid",gid);
+            List<ShopCart> sh = ShopCartDao.selectList(queryWrapper);
+            carts = shopCarts(sh);
+        }
+        return carts;
     }
 }
